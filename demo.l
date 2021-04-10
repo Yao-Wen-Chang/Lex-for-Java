@@ -33,7 +33,7 @@ void dump() {
 operator (\+)|(\-)|(\*)|(\/)|(\=)|(\+\+)|(\-\-)|(\%)|(\<)|(\<\=)|(\>\=)|(\>)|(\=\=)|(\!\=)|(\&\&)|(\|\|)|(\!)
 space [ \t]
 eol \n
-comment (\/\/.*)|(\/\*(.*\n)*\*\/)
+comment (\/\/.*)|(\/\*(.*\n)*.*\*\/)
 
 
 /* You should write your own regular expression. */
@@ -44,19 +44,20 @@ integer [-+]?[0-9]*
 float [-+]?[0-9]*[.][0-9]+([eE][-+][0-9]+)*
 string [\"][^"]*[\"]
 %%
+{comment} {
+    charCount += yyleng;
+}
 {operator} {
 	printf("Line: %d, 1st char: %d, \"%s\" is an \"operator\".\n", lineCount, charCount, yytext);
 	charCount += yyleng;
 }
+
 {space} {
 	charCount++;
 }
 {eol} {
 	lineCount++;
 	charCount = 1;
-}
-{comment} {
-    charCount += yyleng;
 }
 {reserved_word} {
     /* You shold write your own code */
